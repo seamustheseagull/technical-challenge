@@ -19,12 +19,12 @@ https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install-linux.htm
 
 - Open a console and change to the `app` directory of the solution
 
-- Initialise your elastic beanstalk local environment: `eb init` 
--- The access ID and Key should have appropriate roles/permission to spin up environments in AWS
--- Ensure you select Python 2.7 as the appropriate python version
+- Initialise your elastic beanstalk local environment: **`eb init`** 
+	- The access ID and Key should have appropriate roles/permission to spin up environments in AWS
+	- Ensure you select Python 2.7 as the appropriate python version
 
 - In the AWS console you will now see the application created
 
-- Run the command `eb create tech-challenge-env` to create a new environment and deploy to EB
+- Run the command **`eb create tech-challenge-env`** to create a new environment and deploy to EB
 
 - After a few minutes the environment will be complete and accessible from the auto-generate URL specified in the ElasticBeanstalk console.
