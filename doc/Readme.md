@@ -1,40 +1,30 @@
-# Paint batch optimizer service
+# Create and spinning up a solution using AWS ElasticBeanstalk
 
-## Purpose
+## Description
 
-This service provides solutions for the following problem.
+The configuration files in this solution allow you to stand up an minimally-functional ElasticBeanstalk environment incorporating an elastic load balancer supporting up to four instances, which will autoscale based on the current latency.
 
-Our users own paint factories. There are N different colors they can mix, and each color can be prepared "matte" or "glossy". So, you can make 2N different types of paint.
+The solution runs on port 80 with a hacked-together homepage to validate node health
 
-Each of their customers has a set of paint types they like, and customers will be satisfied if you have at least one of those types prepared. At most one of the types a customer likes will be a "matte".
+## Prereqs
 
-Our user wants to make N batches of paint, so that:
+This requires that you have the ElasticBeanstalk CLI installed on your machine;
 
-There is exactly one batch for each color of paint, and it is either matte or glossy. For each customer, user makes at least one paint that they like. The minimum possible number of batches are matte (since matte is more expensive to make). This service finds whether it is possible to satisfy all customers given these constraints, and if it is, what paint types you should make. If it is possible to satisfy all your customers, there will be only one answer which minimizes the number of matte batches.
+https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install-linux.html
 
-Input
 
-Integer N, the number of paint colors,  integer M, the number of customers. A list of M lists, one for each customer, each containing: An integer T >= 1, the number of paint types the customer likes, followed by T pairs of integers "X Y", one for each type the customer likes, where X is the paint color between 1 and N inclusive, and Y is either 0 to indicate glossy, or 1 to indicated matte. Note that: No pair will occur more than once for a single customer. Each customer will have at least one color that they like (T >= 1). Each customer will like at most one matte color. (At most one pair for each customer has Y = 1). 
+## Steps to run using the EB CLI
 
-Output
+- Clone/Download the repo to your machine
 
-The string "IMPOSSIBLE", if the customers' preferences cannot be satisfied; OR N space-separated integers, one for each color from 1 to N, which are 0 if the corresponding paint should be prepared glossy, and 1 if it should be matte.
+- Open a console and change to the `app` directory of the solution
 
-## Usage
+- Initialise your elastic beanstalk local environment: `eb init` 
+-- The access ID and Key should have appropriate roles/permission to spin up environments in AWS
+-- Ensure you select Python 2.7 as the appropriate python version
 
-In the `app` directory you will see a small Python web service (`app.py`), a dependency list (`requirements.txt`) and a `Makefile`. The `Makefile` contains 2 targets: `build` that just installs the requirements into the current Python environment, and `run` which runs an example instance of the application.
+- In the AWS console you will now see the application created
 
-The application has a primary endpoint at `/v1/`. When you make calls to this endpoint, you can send a JSON string as the argument "input". The JSON string contains three keys: colors, costumers and demands.
+- Run the command `eb create tech-challenge-env` to create a new environment and deploy to EB
 
-Examples:
-
-http://0.0.0.0:8080/v1/?input={%22colors%22:1,%22customers%22:2,%22demands%22:[[1,1,1],[1,1,0]]}
-IMPOSSIBLE
-
-http://0.0.0.0:8080/v1/?input={%22colors%22:5,%22customers%22:3,%22demands%22:[[1,1,1],[2,1,0,2,0],[1,5,0]]}
-1 0 0 0 0
-
-## Limitations
-
-None of our users produce more than 2000 different colors, or have more than 2000 customers. (1 <= N <= 2000 1 <= M <= 2000)
-The sum of all the T values for the customers in a request will not exceed 3000.
+- After a few minutes the environment will be complete and accessible from the auto-generate URL specified in the ElasticBeanstalk console.
